@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+
+# Node.js
+node_modules/
+
+# Data
+data/
+*.csv
+*.json
+
+# MLFlow and DVC
+mlruns/
+.dvc/
