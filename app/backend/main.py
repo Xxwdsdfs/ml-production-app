@@ -36,6 +36,11 @@ def predict():
         return jsonify({"error": "Veuillez fournir Total_Joueur et Carte_Croupier"}), 400
 
     exemple = pd.DataFrame([[total_joueur, carte_croupier]], columns=['Total_Joueur', 'Carte_Croupier'])
+    
+    # Convertir les colonnes en float64
+    exemple['Total_Joueur'] = exemple['Total_Joueur'].astype('float64')
+    exemple['Carte_Croupier'] = exemple['Carte_Croupier'].astype('float64')
+
     prediction = model.predict(exemple)
     # Encodage des résultats de l'action (tirer/rester) avec LabelEncoder
     encoder = LabelEncoder()
