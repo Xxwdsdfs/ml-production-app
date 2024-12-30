@@ -3,19 +3,22 @@ from flask_cors import CORS  # Import Flask-CORS
 import joblib
 import pandas as pd
 import os
+import mlflow
+import mlflow.pyfunc
+from sklearn.preprocessing import LabelEncoder
+import dagshub
 
 app = Flask(__name__)
 CORS(app)  # Autorise toutes les origines par défaut
 
 # Obtenir le chemin du répertoire courant du fichier (main.py)
-current_dir = os.path.dirname(__file__)
+# Configuration de MLFlow avec l'URI de suivi
+dagshub.init(repo_owner='Xxwdsdfs', repo_name='ml-production-app', mlflow=True)
 
-# Construire un chemin relatif pour le modèle
-model_path = os.path.join(current_dir, "../../ml/model_registry/model.joblib")
-
-# Charger le modèle
-model, encoder = joblib.load(model_path)
-print(f"Modèle chargé depuis : {model_path}")
+# Charger le modèle depuis MLFlow
+model_uri = "models:/DecisionTree/1"  # Assure-toi de mettre la bonne version du modèle ici
+model = mlflow.pyfunc.load_model(model_uri)
+print(f"Modèle chargé depuis : {model_uri}")
 
 # Route d'accueil (pour éviter l'erreur 404)
 @app.route('/', methods=['GET'])
@@ -33,7 +36,16 @@ def predict():
         return jsonify({"error": "Veuillez fournir Total_Joueur et Carte_Croupier"}), 400
 
     exemple = pd.DataFrame([[total_joueur, carte_croupier]], columns=['Total_Joueur', 'Carte_Croupier'])
+    
+    # Convertir les colonnes en float64
+    exemple['Total_Joueur'] = exemple['Total_Joueur'].astype('float64')
+    exemple['Carte_Croupier'] = exemple['Carte_Croupier'].astype('float64')
+
     prediction = model.predict(exemple)
+    # Encodage des résultats de l'action (tirer/rester) avec LabelEncoder
+    encoder = LabelEncoder()
+    actions = ['tirer', 'rester']  # Possible actions (tirer/rester)
+    encoder.fit(actions)  # On entraîne l'encoder sur ces valeurs
     action = encoder.inverse_transform(prediction)
 
     return jsonify({"Total_Joueur": total_joueur, "Carte_Croupier": carte_croupier, "Action": action[0]})
