@@ -1,0 +1,21 @@
+# Étape 1 : Construire le frontend
+FROM node:16-alpine AS build-frontend
+
+WORKDIR /app/frontend
+COPY app/blackjack-frontend/package.json ./
+RUN npm install
+
+COPY app/blackjack-frontend ./
+RUN npm run build
+
+# Étape 2 : Servir le frontend à partir d'un serveur statique
+FROM nginx:alpine
+
+# Copier les fichiers construits du frontend dans le répertoire Nginx
+COPY --from=build-frontend /app/frontend/dist /usr/share/nginx/html
+
+# Exposer le port du frontend
+EXPOSE 8080
+
+# Lancer Nginx pour servir le frontend
+CMD ["nginx", "-g", "daemon off;"]

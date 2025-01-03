@@ -1,0 +1,31 @@
+# Étape 1 : Utiliser une image de base Python
+FROM python:3.10-slim
+
+# Mettre à jour pip
+RUN pip install --upgrade pip
+
+# Installer les dépendances système nécessaires
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libffi-dev \
+    libssl-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier et installer les dépendances Python
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copier le backend
+COPY app/backend /app/backend
+
+# Exposer le port du backend
+EXPOSE 8000
+
+# Démarrer le backend
+CMD ["python", "/app/backend/main.py"]

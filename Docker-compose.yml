@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend  # Assurez-vous que le Dockerfile du backend est bien nommé et référencé
+    ports:
+      - "8000:8000"
+    environment:
+      - AUTH_TOKEN=8e4b1349b8d0740436a374a0ccc28207db7df3bf
+    depends_on:
+      - frontend  # Assurez-vous que la dépendance est bien formatée en liste
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend  # Dockerfile pour le frontend
+    ports:
+      - "8080:8080"
