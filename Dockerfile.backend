@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY app/backend /app/backend
 
 # Exposer le port du backend
-EXPOSE 8000
+EXPOSE 5000
 
 # Démarrer le backend
 CMD ["python", "/app/backend/main.py"]
