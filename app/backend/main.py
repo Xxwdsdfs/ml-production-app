@@ -9,9 +9,8 @@ from sklearn.preprocessing import LabelEncoder
 import dagshub
 
 app = Flask(__name__)
-CORS(app)  # Autorise toutes les origines par défaut
+CORS(app, resources={r"/predict": {"origins": "*"}})  # Autoriser toutes les origines sur /predict
 
-# Obtenir le chemin du répertoire courant du fichier (main.py)
 # Configuration de MLFlow avec l'URI de suivi
 dagshub.init(repo_owner='Xxwdsdfs', repo_name='ml-production-app', mlflow=True)
 
@@ -51,4 +50,4 @@ def predict():
     return jsonify({"Total_Joueur": total_joueur, "Carte_Croupier": carte_croupier, "Action": action[0]})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+        app.run(debug=True, host="0.0.0.0", port=5000)
