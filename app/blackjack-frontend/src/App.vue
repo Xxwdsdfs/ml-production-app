@@ -70,7 +70,7 @@ export default {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/predict', {
+      const response = await axios.post('/predict', {
         Total_Joueur: this.totalJoueur,
         Carte_Croupier: this.carteCroupier,
       });
