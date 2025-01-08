@@ -1,0 +1,42 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout code
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Build and push the backend Docker image
+    - name: Build backend Docker image
+      run: |
+        docker build -t backend-image -f Dockerfile.backend .
+
+    # Build and push the frontend Docker image
+    - name: Build frontend Docker image
+      run: |
+        docker build -t frontend-image -f Dockerfile.frontend .
+
+    # Build and push the Nginx Docker image
+    - name: Build Nginx Docker image
+      run: |
+        docker build -t nginx-image -f Dockerfile.nginx .
+
+    # Deploy images to the server (via SSH, Docker, or cloud provider)
+    - name: Deploy to server
+      run: |
+        ssh user@server "docker pull backend-image"
+        ssh user@server "docker pull frontend-image"
+        ssh user@server "docker pull nginx-image"
+        
+        # Lancer les conteneurs (assurez-vous d'avoir un réseau Docker pour les connecter)
+        ssh user@server "docker run -d --name backend --network app-network backend-image"
+        ssh user@server "docker run -d --name frontend --network app-network frontend-image"
+        ssh user@server "docker run -d --name nginx -p 80:80 --network app-network nginx-image"
