@@ -51,8 +51,8 @@ jobs:
 
       - name: Push to staging branch
         run: |
-          git config --global user.email "mouhamadou.gueye@efrei.net"
-          git config --global user.name "acbbiste17"
+          git config --global user.email "axelbenoist@orange.fr"
+          git config --global user.name "Xxwdsdfs"
           git checkout staging
           git merge dev
           git push origin staging
