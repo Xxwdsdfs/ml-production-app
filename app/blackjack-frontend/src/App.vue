@@ -1,25 +1,25 @@
 <template>
   <div id="app">
     <div class="casino-background">
-      <h1 class="title">Prédiction Blackjack</h1>
+      <h1 class="title">Blackjack Prediction</h1>
       <form @submit.prevent="makePrediction" class="prediction-form">
         <div class="form-group">
-          <label for="total_joueur">Total du joueur :</label>
+          <label for="total_joueur">Your hand :</label>
           <input v-model="totalJoueur" type="number" id="total_joueur" required class="input-field"/>
           <div v-if="totalJoueurError" class="error-message">{{ totalJoueurError }}</div>
         </div>
 
         <div class="form-group">
-          <label for="carte_croupier">Carte du croupier :</label>
+          <label for="carte_croupier">Dealer's hand :</label>
           <input v-model="carteCroupier" type="number" id="carte_croupier" required class="input-field"/>
           <div v-if="carteCroupierError" class="error-message">{{ carteCroupierError }}</div>
         </div>
 
-        <button type="submit" class="submit-btn">Faire une prédiction</button>
+        <button type="submit" class="submit-btn">Win some money</button>
       </form>
 
       <div v-if="prediction" class="prediction-result">
-        <h2>Résultat de la prédiction :</h2>
+        <h2>Your call ! :</h2>
         <p class="action">Action : {{ prediction }}</p>
       </div>
     </div>
@@ -36,8 +36,8 @@ export default {
       totalJoueur: null,
     carteCroupier: null,
     prediction: null,
-    totalJoueurError: 'The number must be between 4 and 21',  // Erreur pour Total_Joueur
-    carteCroupierError: 'The number must be between 2 and 11'  // Erreur pour Carte_Croupier
+    totalJoueurError: '',  // Erreur pour Total_Joueur
+    carteCroupierError: ''  // Erreur pour Carte_Croupier
     };
   },
 
@@ -45,13 +45,13 @@ export default {
   validateInput() {
     // Validation pour le total du joueur
     if (this.totalJoueur < 4 || this.totalJoueur > 21) {
-      this.totalJoueurError = 'Le total du joueur doit être entre 4 et 21';
+      this.totalJoueurError = 'The number must be between 4 and 21';
       return false;
     }
     
     // Validation pour la carte du croupier
     if (this.carteCroupier < 2 || this.carteCroupier > 11) {
-      this.carteCroupierError = 'La carte du croupier doit être entre 2 et 11';
+      this.carteCroupierError = 'The number must be between 2 and 11';
       return false;
     }
     
