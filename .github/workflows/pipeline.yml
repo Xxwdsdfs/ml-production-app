@@ -51,8 +51,8 @@ jobs:
 
       - name: Push to staging branch
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "mouhamadou.gueye@efrei.net"
+          git config --global user.name "acbbiste17"
           git checkout staging
           git merge dev
           git push origin staging
