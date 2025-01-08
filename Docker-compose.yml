@@ -1,0 +1,26 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend  # Assurez-vous que le Dockerfile du backend est bien nommé et référencé
+    ports:
+      - "8000:8000"
+    environment:
+      - DAGSHUB_TOKEN=165c7042b2103a764df6d4ffffcb916b1a8dfa83
+    depends_on:
+      - frontend  # Assurez-vous que la dépendance est bien formatée en liste
+    networks:
+      - app-network  # Ajout d'un réseau pour permettre aux services de communiquer
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend  # Dockerfile pour le frontend
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network  # Ajout d'un réseau pour permettre aux services de communiquer
+
+networks:
+  app-network:
+    driver: bridge  # Utilisation du réseau bridge par défaut de Docker
