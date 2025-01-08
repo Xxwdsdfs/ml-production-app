@@ -10,6 +10,10 @@ on:
       - staging
       - main
 
+permissions:
+  contents: write
+
+
 jobs:
   pull_request:
     if: github.event_name == 'pull_request'
@@ -51,11 +55,19 @@ jobs:
 
       - name: Push to staging branch
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-          git checkout staging
-          git merge dev
+          git config --global user.email "axelbenoist@orange.fr"
+          git config --global user.name "Axel Benoist"
+          git fetch origin +refs/heads/*:refs/remotes/origin/*  # Récupère toutes les branches distantes
+          if git rev-parse --verify origin/staging; then
+            git checkout staging
+            git pull origin staging
+          else
+            git checkout -b staging
+          fi
+          git merge dev --allow-unrelated-histories  # Ajout de l'option pour fusionner sans historique commun
           git push origin staging
+
+
 
   staging_tests:
     if: github.ref == 'refs/heads/staging'
@@ -88,8 +100,8 @@ jobs:
 
       - name: Push to production branch
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "mouhamadou.gueye @efrei.net"
+          git config --global user.name "acbbiste17"
           git checkout main
           git merge staging
           git push origin main
