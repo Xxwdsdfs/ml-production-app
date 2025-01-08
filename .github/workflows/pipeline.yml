@@ -50,7 +50,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Push to staging branch
-      
         run: |
           git config --global user.email "axelbenoist@orange.fr"
           git config --global user.name "Axel Benoist"
@@ -61,10 +60,9 @@ jobs:
           else
             git checkout -b staging
           fi
-          git config --global user.name "Xxwdsdfs"
-          git checkout staging
-          git merge dev
+          git merge dev --allow-unrelated-histories  # Ajout de l'option pour fusionner sans historique commun
           git push origin staging
+
 
 
   staging_tests:
