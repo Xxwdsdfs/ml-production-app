@@ -5,7 +5,7 @@ FROM python:3.10-slim
 RUN pip install --upgrade pip
 
 # Installer les dépendances système nécessaires
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y git --no-install-recommends \
     build-essential \
     libffi-dev \
     libssl-dev \
@@ -15,17 +15,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/
 
 # Définir le répertoire de travail
-WORKDIR /app/backend
+WORKDIR /app
 
-# Copier et installer les dépendances Python
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+# Cloner dynamiquement le repo depuis GitHub
+RUN git clone https://github.com/Xxwdsdfs/ml-production-app.git .
 
-# Copier le backend
-COPY app/backend /app/backend
+# Installer les dépendances depuis requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Exposer le port du backend
+# Exposer le port de l'application
 EXPOSE 5000
 
-# Démarrer le backend
-CMD ["python", "/app/backend/main.py"]
+# Lancer le fichier main.py
+CMD ["python", "app/backend/main.py"]
