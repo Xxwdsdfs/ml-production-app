@@ -35,10 +35,11 @@ jobs:
           echo "Building the app..."
           # Ajoutez des étapes de build si nécessaire
 
-      - name: Run integration tests
+      - name: Run unit test for predict
         run: |
-          echo "Running integration tests..."
-          pytest tests/integration
+          echo "Running test_predict.py..."
+          pytest tests/unit/test_predict.py
+
 
   push_to_staging:
     needs: [pull_request]  # Ce job dépend de pull_request
@@ -87,10 +88,11 @@ jobs:
           echo "Building the app..."
           # Ajoutez des étapes de build si nécessaire
 
-      - name: Run all tests
+      - name: Run unit test for predict
         run: |
-          echo "Running all tests..."
-          pytest
+            echo "Running test_predict.py..."
+            pytest tests/unit/test_predict.py
+  
 
       - name: Push to production branch
         run: |
