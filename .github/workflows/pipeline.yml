@@ -52,6 +52,7 @@ jobs:
       - name: Push to staging branch
         run: |
           git config --global user.email "axelbenoist@orange.fr"
+<<<<<<< HEAD
           git config --global user.name "Axel Benoist"
           git fetch origin +refs/heads/*:refs/remotes/origin/*  # Récupère toutes les branches distantes
           if git rev-parse --verify origin/staging; then
@@ -60,6 +61,10 @@ jobs:
           else
             git checkout -b staging
           fi
+=======
+          git config --global user.name "Xxwdsdfs"
+          git checkout staging
+>>>>>>> 97af43a6042f4df91e2e831b915140623f362924
           git merge dev
           git push origin staging
 
