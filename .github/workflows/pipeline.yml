@@ -1,9 +1,6 @@
 name: CI/CD Workflow
 
 on:
-  pull_request:
-    branches:
-      - dev
   push:
     branches:
       - dev
@@ -13,10 +10,8 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   pull_request:
-    if: github.event_name == 'pull_request'
     name: Build and Test on Pull Request to Dev
     runs-on: ubuntu-latest
 
@@ -45,7 +40,7 @@ jobs:
           pytest tests/integration
 
   push_to_staging:
-    if: github.ref == 'refs/heads/dev'
+    needs: [pull_request]  # Ce job dépend de pull_request
     name: Push to Staging Branch
     runs-on: ubuntu-latest
 
@@ -57,20 +52,18 @@ jobs:
         run: |
           git config --global user.email "axelbenoist@orange.fr"
           git config --global user.name "Axel Benoist"
-          git fetch origin +refs/heads/*:refs/remotes/origin/*  # Récupère toutes les branches distantes
+          git fetch origin +refs/heads/*:refs/remotes/origin/*
           if git rev-parse --verify origin/staging; then
             git checkout staging
             git pull origin staging
           else
             git checkout -b staging
           fi
-          git merge dev --allow-unrelated-histories  # Ajout de l'option pour fusionner sans historique commun
+          git merge dev --allow-unrelated-histories
           git push origin staging
 
-
-
   staging_tests:
-    if: github.ref == 'refs/heads/staging'
+    needs: [push_to_staging]  # Ce job dépend de push_to_staging
     name: Build and Test on Staging
     runs-on: ubuntu-latest
 
@@ -100,14 +93,14 @@ jobs:
 
       - name: Push to production branch
         run: |
-          git config --global user.email "mouhamadou.gueye @efrei.net"
+          git config --global user.email "mouhamadou.gueye@efrei.net"
           git config --global user.name "acbbiste17"
           git checkout main
           git merge staging
           git push origin main
 
   production_deploy:
-    if: github.ref == 'refs/heads/main'
+    needs: [staging_tests]  # Ce job dépend de staging_tests
     name: Deploy to Production
     runs-on: ubuntu-latest
 
