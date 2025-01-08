@@ -1,0 +1,14 @@
+{
+  "dataframe_split": {
+    "columns": [
+      "Total_Joueur",
+      "Carte_Croupier"
+    ],
+    "data": [
+      [
+        14,
+        10
+      ]
+    ]
+  }
+}
